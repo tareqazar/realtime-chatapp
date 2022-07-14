@@ -1,10 +1,10 @@
 const express = require("express");
-const connectdb = require("./../dbconnection");
-const Chats = require("../models/ChatSchema");
+const connectdb = require("./../dbconnect");
+const Chats = require("../models/Chat");
 
 const router = express.Router();
 
-router.route("/").get((req, res, next) => {
+router.route("/").get((req, res) => {
   res.setHeader("Content-Type", "application/json");
   res.statusCode = 200;
 
@@ -15,5 +15,17 @@ router.route("/").get((req, res, next) => {
     });
   });
 });
+
+// router.patch("/items").post((req, res, next) => {
+//   res.setHeader("Content-Type", "application/json");
+//   res.statusCode = 200;
+
+//   connectdb.then(db => {
+//     let data = Chats.find({ message: "Anonymous" });
+//     Chats.find({}).then(chat => {
+//       res.json(chat);
+//     });
+//   });
+// });
 
 module.exports = router;

@@ -1,0 +1,103 @@
+<html>
+    <head>
+        <title>Anonymouse Real-time chat</title>
+        <link  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"  rel="stylesheet"  id="bootstrap-css"/>
+        <link  href="/css/style.css"  type="text/css"  rel="stylesheet"/>
+        <script src="/socket.io/socket.io.js"></script>
+        <script  src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+        <script>
+        
+         var  socket  =  io();
+
+         $(document).ready(function(){//allows DOM function to be used when it's safe to do so(after doc is loaded)
+            let  li  =  document.createElement("li"); 
+            $(".send_message").click(function(){  //when button is clicked, basically an event
+                console.log( $("#message").val());[]
+                socket.emit("tariq", $("#message").val());  //sent on tariq channel to server
+                messages.appendChild(li).append($("#message").val());
+                let  span  =  document.createElement("span");
+                messages.appendChild(span).append("by "  +  "Anonymous"  +  ":   "  +  "just now");
+                $("#message").val("");
+                
+            });
+         });
+
+    //      (function(){
+    //         fetch("/chats")
+    //         .then(data=>{return data.json()})
+    // .then(json => {
+    //   json.map(data => {
+    //      let li = document.createElement("li");
+    //     let span = document.createElement("span");
+    //     messages.appendChild(li).append(data.message);
+    //     messages
+    //       .appendChild(span)
+    //       .append("by " + data.sender );
+    //   });
+    // });
+    //     })();
+
+        (function(){
+            fetch("/chats")
+            .then(data => {
+                return data.json();
+            })
+            .then(result =>{
+                 result.map(data =>{
+                    let li= document.createElement('li');
+                    let span = document.createElement('span');
+                    messages.appendChild(li).append(data.message);
+                    messages.appendChild(span).append("by " + data.sender);
+                 })
+            });
+        })()
+
+         socket.on('received',data=> {
+            let li = document.createElement('li');
+            let span = document.createElement('span');
+            var messages = document.getElementById('messages');
+            messages.appendChild(li).append(data.message);
+            messages.appendChild(span).append("by " + "anonymous" + ":" + "just now");
+            console.log("Message Appended successfully");
+         });
+
+
+        </script>
+     
+    </head>
+<body>
+<div  class="chat_window">
+    <div  class="top_menu">
+    <div  class="buttons">
+    <div  class="button close"></div>
+    <div  class="button minimize"></div>
+    <div  class="button maximize"></div>
+</div>
+    <div  class="title">Chat</div>
+</div>
+    <ul id="messages"   class="messages"></ul>
+<div  class="bottom_wrapper clearfix">
+<i  id="typing"></i>
+  
+        <div  class="message_input_wrapper">
+        <input  id="message"  class="message_input"  placeholder="Type your message here..."  />
+        </div>
+        <button  class="send_message">Send</button>
+   
+</div>
+</div>
+<script>
+    messageField = document.getElementById("message");
+    messageField.addEventListener("keypress",()=>{
+        var data;
+    socket.emit("typing", {user:"Someone", message: "Is typing....."});
+    //working
+})
+socket.on("notifyTyping", data => {
+        console.log("client typing notification");
+console.log(data.message);
+});
+    </script>
+</body>
+</html>
